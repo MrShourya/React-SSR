@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 import bodyParser from 'body-parser';
 import App from './src/App';
-
+import initialState from './src/pages/initialState';
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -43,3 +43,44 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`App runing ${PORT}`);
 });
+
+
+export function renderComponent(callback, data, viewBag) {
+    try {
+      // parse the server-provided data for easier consumption.
+      const renderContext = parseServerData(data, viewBag);
+  
+      const result = { html: null, status: 200, redirect: null };
+  
+      result.html = ReactDOMServer.renderToString(
+        <StaticRouter location={req.url} context={context}>
+            <App />
+        </StaticRouter>
+    );
+  
+      callback(null, result);
+    } catch (err) {
+      // need to ensure the callback is always invoked no matter what
+      // or else SSR will hang
+      callback(err, null);
+    }
+  }
+
+  function parseServerData(data, viewBag) {
+    /*
+      Data from server is double-encoded since MS JSS does not allow control
+      over JSON serialization format.
+    */
+    const parsedData = data instanceof Object ? data : JSON.parse(data);
+    const parsedViewBag = viewBag instanceof Object ? viewBag : JSON.parse(viewBag);
+  
+    const state = initialState();
+    state.viewBag = parsedViewBag;
+  
+    if (parsedData) {
+      state.sitecore = parsedData.sitecore;
+    }
+  
+    return state;
+  }
+  
