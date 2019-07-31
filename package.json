@@ -8,7 +8,9 @@
     "webpack:server": "webpack --config webpack.server.js --watch",
     "webpack:start": "nodemon --watch build --exec node build/bundle.js",
     "dev": "npm-run-all --parallel webpack:*",
-    "build": "webpack --config webpack.client.js &&  webpack --config webpack.server.js"
+    "pack:sitecore":"webpack --config webpack.client.js &&  webpack --config webpack.server.js",
+    "pack:app":"webpack --config webpack.clientSC.js && webpack --config webpack.serverSC.js",
+    "build": "npm-run-all --parallel pack:*"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
