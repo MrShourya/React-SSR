@@ -47,40 +47,39 @@ app.listen(PORT, () => {
 
 export function renderComponent(callback, data, viewBag) {
     try {
-      // parse the server-provided data for easier consumption.
-      const renderContext = parseServerData(data, viewBag);
-  
-      const result = { html: null, status: 200, redirect: null };
-  
-      result.html = ReactDOMServer.renderToString(
-        <StaticRouter location={req.url} context={context}>
-            <App />
-        </StaticRouter>
-    );
-  
-      callback(null, result);
-    } catch (err) {
-      // need to ensure the callback is always invoked no matter what
-      // or else SSR will hang
-      callback(err, null);
-    }
-  }
+        // parse the server-provided data for easier consumption.
+        const renderContext = parseServerData(data, viewBag);
+        console.log("renderContext --> ", renderContext);
+        const result = { html: null, status: 200, redirect: null };
 
-  function parseServerData(data, viewBag) {
+        result.html = ReactDOMServer.renderToString(
+            <StaticRouter location={req.url} context={context}>
+                <App />
+            </StaticRouter>
+        );
+
+        callback(null, result);
+    } catch (err) {
+        // need to ensure the callback is always invoked no matter what
+        // or else SSR will hang
+        callback(err, null);
+    }
+}
+
+function parseServerData(data, viewBag) {
     /*
       Data from server is double-encoded since MS JSS does not allow control
       over JSON serialization format.
     */
     const parsedData = data instanceof Object ? data : JSON.parse(data);
     const parsedViewBag = viewBag instanceof Object ? viewBag : JSON.parse(viewBag);
-  
+
     const state = initialState();
     state.viewBag = parsedViewBag;
-  
+
     if (parsedData) {
-      state.sitecore = parsedData.sitecore;
+        state.sitecore = parsedData.sitecore;
     }
-  
+
     return state;
-  }
-  
+}
