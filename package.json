@@ -8,11 +8,11 @@
     "webpack:server": "webpack --config webpack.server.js --watch",
     "webpack:start": "nodemon --watch build --exec node build/bundle.js",
     "dev": "npm-run-all --parallel webpack:*",
-    "pack:sitecore":"webpack --config webpack.client.js &&  webpack --config webpack.server.js",
-    "pack:app":"webpack --config webpack.clientSC.js && webpack --config webpack.serverSC.js",
+    "pack:sitecore": "webpack --config webpack.client.js &&  webpack --config webpack.server.js",
     "build": "npm-run-all --parallel pack:*"
   },
   "dependencies": {
+    "@tamm/ui-lib-checkbox": "0.3.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",

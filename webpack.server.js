@@ -1,6 +1,10 @@
 const path = require('path');
 const webpackNodeExternals = require('webpack-node-externals');
-
+const ROOT_DIR = path.resolve(__dirname, '..');
+const SRC_DIR = path.join(ROOT_DIR, 'src');
+const BUILD_DIR = path.join(ROOT_DIR, 'build');
+const NODE_MODULES_DIR = path.join(ROOT_DIR, 'node_modules');
+const UILIB_DIR = path.join(NODE_MODULES_DIR, '@tamm');
 module.exports = {
     target: 'node',
     entry: './server.js',
@@ -11,9 +15,10 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.js$/,
+            test: /\.(js|jsx)$/,
             loader: 'babel-loader',
-            exclude: '/node_modules',
+            include: [SRC_DIR, UILIB_DIR],
+            // exclude: '/node_modules',
             options: {
                 presets: [
                     'react',
